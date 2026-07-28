@@ -180,31 +180,11 @@
         <div id="formStage">
           <fieldset>
             <legend>Motivazione da sottoporre al comitato</legend>
-            <p class="helper-text">Selezionare una sola motivazione, possibilmente credibile.</p>
-
-            <label class="reason-option">
-              <input type="radio" name="reason" value="calendar" />
-              <span>
-                <strong>Consultazione del calendario in corso</strong>
-                <small>I pianeti e gli impegni non hanno ancora raggiunto un accordo.</small>
-              </span>
-            </label>
-
-            <label class="reason-option">
-              <input type="radio" name="reason" value="snacks" />
-              <span>
-                <strong>Informativa snack insufficiente</strong>
-                <small>Non sono state fornite garanzie scritte sulla disponibilità di cibo.</small>
-              </span>
-            </label>
-
-            <label class="reason-option">
-              <input type="radio" name="reason" value="charm" />
-              <span>
-                <strong>Livello di fascino sospetto</strong>
-                <small>L'offerta appare fin troppo interessante per essere archiviata subito.</small>
-              </span>
-            </label>
+            <p class="helper-text">
+              Quattro motivazioni estratte dall'archivio. Selezionarne una,
+              possibilmente credibile.
+            </p>
+            <div class="reason-list" id="reasonList"></div>
           </fieldset>
 
           <p class="form-error" id="formError" role="alert"></p>
@@ -219,7 +199,7 @@
           <h3 id="rulingTitle"></h3>
           <p id="rulingMessage" aria-live="polite"></p>
           <button class="button button-primary full-width" id="retryDecline" type="button">
-            Compila una nuova istanza
+            Nuovo ricorso, nuove motivazioni
           </button>
           <button class="text-button full-width" id="raincheckButton" type="button" hidden>
             Richiedi un “magari un'altra volta”

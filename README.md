@@ -3,6 +3,10 @@
 Un piccolo sito statico, in italiano e ottimizzato per smartphone, per invitare una
 persona a un appuntamento con un livello di burocrazia completamente ingiustificato.
 
+Il pulsante di rifiuto apre una pratica in cinque ricorsi: a ogni invio vengono
+rimescolate quattro motivazioni estratte da un archivio di diciotto, seguite da una
+sentenza animata. Al termine resta disponibile un rispettoso “magari un'altra volta”.
+
 ## Personalizzazione
 
 Apri `script.js` e modifica i valori dentro `CONFIG`:
