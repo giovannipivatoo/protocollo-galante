@@ -1,6 +1,6 @@
 const CONFIG = {
-  recipientName: "[IL SUO NOME]",
-  senderName: "[IL TUO NOME]",
+  recipientName: "Vitoria",
+  senderName: "Giovanni",
   dateTitle: "un aperitivo e una passeggiata",
   dateNote: "Scegli il giorno. A tutto il resto penso io.",
   whatsappNumber: "393924899781",
