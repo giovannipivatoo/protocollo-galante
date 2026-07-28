@@ -14,11 +14,12 @@ Apri `script.js` e modifica i valori dentro `CONFIG`:
 - `recipientName`: il suo nome;
 - `senderName`: il tuo nome;
 - `dateTitle`: il tipo di appuntamento;
-- `dateWhen`: giorno e ora;
-- `dateWhere`: luogo;
 - `dateNote`: una nota breve;
 - `whatsappNumber`: numero internazionale senza `+`, spazi o trattini;
 - `whatsappMessage`: messaggio precompilato.
+
+La persona che accetta sceglie direttamente la data e scrive il luogo nella schermata
+finale. Entrambi i valori vengono aggiunti automaticamente al messaggio WhatsApp.
 
 Il numero WhatsApp e tutti gli altri dati inseriti saranno visibili pubblicamente nel
 repository e nel codice del sito.

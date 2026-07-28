@@ -120,26 +120,47 @@
           <div class="approved-stamp" aria-hidden="true">APPROVATO</div>
           <p class="dossier-label">Dettagli della convocazione</p>
           <h3 data-config="dateTitle">Aperitivo e passeggiata</h3>
-          <dl>
-            <div>
-              <dt>Quando</dt>
-              <dd data-config="dateWhen">[GIORNO E ORA]</dd>
+          <form class="date-details-form" id="dateDetailsForm" novalidate>
+            <div class="detail-field">
+              <label for="dateInput">Quando</label>
+              <input
+                id="dateInput"
+                name="date"
+                type="date"
+                required
+                aria-describedby="dateHelper dateFormError"
+              />
+              <small id="dateHelper">Scegli il giorno da proporre ufficialmente.</small>
             </div>
-            <div>
-              <dt>Dove</dt>
-              <dd data-config="dateWhere">[LUOGO]</dd>
+
+            <div class="detail-field">
+              <label for="placeInput">Dove</label>
+              <input
+                id="placeInput"
+                name="place"
+                type="text"
+                maxlength="90"
+                placeholder="Scrivi il luogo dell'appuntamento"
+                autocomplete="off"
+                required
+                aria-describedby="placeHelper dateFormError"
+              />
+              <small id="placeHelper">Un locale, un parco o un indirizzo abbastanza preciso.</small>
             </div>
-            <div>
-              <dt>Nota</dt>
-              <dd data-config="dateNote">Vieni come sei. Al resto penso io.</dd>
+
+            <div class="dossier-note">
+              <span>Nota</span>
+              <p data-config="dateNote">Vieni come sei. Al resto penso io.</p>
             </div>
-          </dl>
-          <a class="button button-primary whatsapp-link" id="whatsappLink" href="#" rel="noopener">
-            Conferma su WhatsApp
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6"></path>
-            </svg>
-          </a>
+
+            <p class="form-error date-form-error" id="dateFormError" role="alert"></p>
+            <button class="button button-primary whatsapp-link" id="whatsappLink" type="submit">
+              Invia la proposta su WhatsApp
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6"></path>
+              </svg>
+            </button>
+          </form>
         </div>
 
         <button class="text-button restart-button" type="button">Ricomincia</button>

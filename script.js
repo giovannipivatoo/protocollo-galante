@@ -2,12 +2,10 @@ const CONFIG = {
   recipientName: "[IL SUO NOME]",
   senderName: "[IL TUO NOME]",
   dateTitle: "un aperitivo e una passeggiata",
-  dateWhen: "[GIORNO E ORA]",
-  dateWhere: "[LUOGO]",
   dateNote: "Vieni come sei. Al resto penso io.",
-  whatsappNumber: "39XXXXXXXXXX",
+  whatsappNumber: "393924899781",
   whatsappMessage:
-    "Confermo ufficialmente: accetto l'invito. Puoi considerare la pratica approvata.",
+    "Confermo ufficialmente: accetto l'invito.",
 };
 
 const MAX_DECLINE_ATTEMPTS = 5;
@@ -151,7 +149,10 @@ const rulingTitle = document.querySelector("#rulingTitle");
 const rulingMessage = document.querySelector("#rulingMessage");
 const retryDeclineButton = document.querySelector("#retryDecline");
 const raincheckButton = document.querySelector("#raincheckButton");
-const whatsappLink = document.querySelector("#whatsappLink");
+const dateDetailsForm = document.querySelector("#dateDetailsForm");
+const dateInput = document.querySelector("#dateInput");
+const placeInput = document.querySelector("#placeInput");
+const dateFormError = document.querySelector("#dateFormError");
 const confetti = document.querySelector("#confetti");
 const restartButtons = document.querySelectorAll(".restart-button");
 
@@ -218,11 +219,38 @@ function populateConfiguration() {
     }
   });
 
+  dateInput.min = getLocalISODate();
+}
+
+function getLocalISODate() {
+  const now = new Date();
+  const offsetInMilliseconds = now.getTimezoneOffset() * 60_000;
+  return new Date(now.getTime() - offsetInMilliseconds).toISOString().slice(0, 10);
+}
+
+function formatDateForMessage(value) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Intl.DateTimeFormat("it-IT", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(year, month - 1, day));
+}
+
+function createWhatsappUrl(date, place) {
   const cleanNumber = CONFIG.whatsappNumber.replace(/\D/g, "");
-  whatsappLink.href = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(
+  const message = [
     CONFIG.whatsappMessage,
-  )}`;
-  whatsappLink.target = "_blank";
+    "",
+    `Programma: ${CONFIG.dateTitle}`,
+    `Data proposta: ${formatDateForMessage(date)}`,
+    `Luogo: ${place}`,
+    "",
+    "Puoi considerare la pratica approvata.",
+  ].join("\n");
+
+  return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
 }
 
 function showView(view) {
@@ -273,6 +301,8 @@ function resetExperience() {
   successView.hidden = true;
   raincheckView.hidden = true;
   invitationView.hidden = false;
+  dateDetailsForm.reset();
+  dateFormError.textContent = "";
   resetDeclineForm();
   window.scrollTo({ top: 0, behavior: "smooth" });
   requestAnimationFrame(() => acceptButton.focus({ preventScroll: true }));
@@ -281,6 +311,34 @@ function resetExperience() {
 acceptButton.addEventListener("click", () => {
   showView(successView);
   createConfetti();
+});
+
+dateDetailsForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const chosenDate = dateInput.value;
+  const chosenPlace = placeInput.value.trim();
+
+  if (!chosenDate || !chosenPlace) {
+    dateFormError.textContent =
+      "Per protocollare la conferma servono sia una data sia un luogo.";
+    (!chosenDate ? dateInput : placeInput).focus();
+    return;
+  }
+
+  if (chosenDate < getLocalISODate()) {
+    dateFormError.textContent = "La macchina del tempo non è disponibile: scegli una data futura.";
+    dateInput.focus();
+    return;
+  }
+
+  dateFormError.textContent = "";
+  window.location.href = createWhatsappUrl(chosenDate, chosenPlace);
+});
+
+[dateInput, placeInput].forEach((input) => {
+  input.addEventListener("input", () => {
+    dateFormError.textContent = "";
+  });
 });
 
 declineButton.addEventListener("click", () => {

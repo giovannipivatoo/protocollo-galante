@@ -514,28 +514,74 @@ h1 {
   letter-spacing: -0.035em;
 }
 
-.date-dossier dl {
-  margin: 0 0 30px;
+.date-details-form {
+  display: grid;
+  gap: 0;
 }
 
-.date-dossier dl > div {
-  padding: 13px 0;
+.detail-field {
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 8px;
+}
+
+.detail-field label,
+.dossier-note > span {
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.detail-field input {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 11px 13px;
+  color: var(--ink);
+  background: rgba(245, 239, 227, 0.52);
+  font-family: var(--sans);
+  font-size: 1rem;
+  transition:
+    border-color 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 250ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.detail-field input:focus {
+  border-color: var(--accent);
+  background: var(--paper-light);
+  transform: translate3d(2px, 0, 0);
+}
+
+.detail-field input::placeholder {
+  color: #8a8179;
+}
+
+.detail-field small {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.dossier-note {
+  padding: 16px 0;
   border-top: 1px solid var(--line);
   display: grid;
   grid-template-columns: 90px 1fr;
   gap: 16px;
 }
 
-.date-dossier dt {
-  color: var(--accent);
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.date-dossier dd {
+.dossier-note p {
   margin: 0;
   line-height: 1.45;
+}
+
+.date-form-error {
+  margin: 2px 0 8px;
 }
 
 .text-button {
@@ -1039,7 +1085,7 @@ legend {
     font-size: clamp(3.1rem, 17vw, 5rem);
   }
 
-  .date-dossier dl > div {
+  .dossier-note {
     grid-template-columns: 1fr;
     gap: 5px;
   }
