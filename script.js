@@ -2,7 +2,7 @@ const CONFIG = {
   recipientName: "[IL SUO NOME]",
   senderName: "[IL TUO NOME]",
   dateTitle: "un aperitivo e una passeggiata",
-  dateNote: "Vieni come sei. Al resto penso io.",
+  dateNote: "Scegli il giorno. A tutto il resto penso io.",
   whatsappNumber: "393924899781",
   whatsappMessage:
     "Confermo ufficialmente: accetto l'invito.",
@@ -149,10 +149,9 @@ const rulingTitle = document.querySelector("#rulingTitle");
 const rulingMessage = document.querySelector("#rulingMessage");
 const retryDeclineButton = document.querySelector("#retryDecline");
 const raincheckButton = document.querySelector("#raincheckButton");
-const dateDetailsForm = document.querySelector("#dateDetailsForm");
 const dateInput = document.querySelector("#dateInput");
-const placeInput = document.querySelector("#placeInput");
 const dateFormError = document.querySelector("#dateFormError");
+const whatsappLink = document.querySelector("#whatsappLink");
 const confetti = document.querySelector("#confetti");
 const restartButtons = document.querySelectorAll(".restart-button");
 
@@ -238,19 +237,32 @@ function formatDateForMessage(value) {
   }).format(new Date(year, month - 1, day));
 }
 
-function createWhatsappUrl(date, place) {
+function createWhatsappUrl(date) {
   const cleanNumber = CONFIG.whatsappNumber.replace(/\D/g, "");
   const message = [
     CONFIG.whatsappMessage,
     "",
     `Programma: ${CONFIG.dateTitle}`,
-    `Data proposta: ${formatDateForMessage(date)}`,
-    `Luogo: ${place}`,
+    `Data scelta: ${formatDateForMessage(date)}`,
     "",
+    "Per il luogo, l'organizzazione e tutto il resto mi affido a te.",
     "Puoi considerare la pratica approvata.",
   ].join("\n");
 
   return `https://wa.me/${cleanNumber}?text=${encodeURIComponent(message)}`;
+}
+
+function updateWhatsappLink() {
+  const chosenDate = dateInput.value;
+  const isValidDate = chosenDate && chosenDate >= getLocalISODate();
+
+  if (isValidDate) {
+    whatsappLink.href = createWhatsappUrl(chosenDate);
+    whatsappLink.setAttribute("aria-disabled", "false");
+  } else {
+    whatsappLink.removeAttribute("href");
+    whatsappLink.setAttribute("aria-disabled", "true");
+  }
 }
 
 function showView(view) {
@@ -301,8 +313,9 @@ function resetExperience() {
   successView.hidden = true;
   raincheckView.hidden = true;
   invitationView.hidden = false;
-  dateDetailsForm.reset();
+  dateInput.value = "";
   dateFormError.textContent = "";
+  updateWhatsappLink();
   resetDeclineForm();
   window.scrollTo({ top: 0, behavior: "smooth" });
   requestAnimationFrame(() => acceptButton.focus({ preventScroll: true }));
@@ -313,32 +326,30 @@ acceptButton.addEventListener("click", () => {
   createConfetti();
 });
 
-dateDetailsForm.addEventListener("submit", (event) => {
-  event.preventDefault();
+whatsappLink.addEventListener("click", (event) => {
   const chosenDate = dateInput.value;
-  const chosenPlace = placeInput.value.trim();
 
-  if (!chosenDate || !chosenPlace) {
-    dateFormError.textContent =
-      "Per protocollare la conferma servono sia una data sia un luogo.";
-    (!chosenDate ? dateInput : placeInput).focus();
+  if (!chosenDate) {
+    event.preventDefault();
+    dateFormError.textContent = "Per protocollare la conferma devi scegliere un giorno.";
+    dateInput.focus();
     return;
   }
 
   if (chosenDate < getLocalISODate()) {
+    event.preventDefault();
     dateFormError.textContent = "La macchina del tempo non è disponibile: scegli una data futura.";
     dateInput.focus();
     return;
   }
 
   dateFormError.textContent = "";
-  window.location.href = createWhatsappUrl(chosenDate, chosenPlace);
+  whatsappLink.href = createWhatsappUrl(chosenDate);
 });
 
-[dateInput, placeInput].forEach((input) => {
-  input.addEventListener("input", () => {
-    dateFormError.textContent = "";
-  });
+dateInput.addEventListener("input", () => {
+  dateFormError.textContent = "";
+  updateWhatsappLink();
 });
 
 declineButton.addEventListener("click", () => {

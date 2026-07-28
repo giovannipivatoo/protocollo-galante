@@ -294,6 +294,12 @@ h1 {
   animation: content-rise 700ms 660ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+.official-clause-secondary {
+  margin-top: 0;
+  padding-top: 18px;
+  animation-delay: 730ms;
+}
+
 .official-clause p {
   margin: 0;
   line-height: 1.65;
@@ -1090,7 +1096,7 @@ legend {
     gap: 5px;
   }
 
-  .whatsapp-link {
+.whatsapp-link {
     width: 100%;
   }
 
@@ -1098,6 +1104,10 @@ legend {
     top: -19px;
     right: 14px;
   }
+}
+
+.whatsapp-link[aria-disabled="true"] {
+  opacity: 0.58;
 }
 
 @media (max-width: 390px) {

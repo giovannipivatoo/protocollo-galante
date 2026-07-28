@@ -18,8 +18,9 @@ Apri `script.js` e modifica i valori dentro `CONFIG`:
 - `whatsappNumber`: numero internazionale senza `+`, spazi o trattini;
 - `whatsappMessage`: messaggio precompilato.
 
-La persona che accetta sceglie direttamente la data e scrive il luogo nella schermata
-finale. Entrambi i valori vengono aggiunti automaticamente al messaggio WhatsApp.
+La persona che accetta sceglie direttamente la data nella schermata finale. Il giorno
+viene aggiunto automaticamente al messaggio WhatsApp; luogo, organizzazione e resto
+dell'appuntamento restano volutamente a carico del mittente.
 
 Il numero WhatsApp e tutti gli altri dati inseriti saranno visibili pubblicamente nel
 repository e nel codice del sito.
