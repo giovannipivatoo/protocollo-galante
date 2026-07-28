@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#791f2b" />
+    <meta
+      name="description"
+      content="Una richiesta ufficialissima per un appuntamento decisamente poco ufficiale."
+    />
+    <title>Richiesta ufficiale di appuntamento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Libre+Caslon+Display&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <main class="site-shell">
+      <aside class="document-rail" aria-label="Dettagli del documento">
+        <div class="rail-top">
+          <p class="eyebrow">Ufficio affari sentimentali</p>
+          <p class="document-code">MOD. APP-01</p>
+        </div>
+
+        <div class="rail-index" aria-hidden="true">
+          <span>01</span>
+          <span class="rail-line"></span>
+          <span>RISERVATO</span>
+        </div>
+
+        <p class="rail-note">
+          Documento valido per una sola persona, una sola risposta e un numero
+          ragionevole di sorrisi.
+        </p>
+      </aside>
+
+      <article class="invitation paper-view" id="invitationView" aria-labelledby="mainTitle">
+        <header class="paper-header">
+          <div class="seal" aria-hidden="true">
+            <svg viewBox="0 0 100 100" role="img">
+              <circle cx="50" cy="50" r="45"></circle>
+              <circle cx="50" cy="50" r="35"></circle>
+              <path d="M50 70 29 49c-12-14 9-30 21-16 12-14 33 2 21 16Z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="eyebrow accent">Comunicazione prioritaria</p>
+            <p class="issue-date">Protocollo <span id="protocolNumber">2707-A</span></p>
+          </div>
+        </header>
+
+        <div class="invitation-copy">
+          <p class="recipient-line">
+            All'attenzione esclusiva di
+            <strong data-config="recipientName">[IL SUO NOME]</strong>
+          </p>
+
+          <h1 id="mainTitle">Convocazione per un appuntamento</h1>
+
+          <p class="lead">
+            A seguito di un'accurata valutazione, il sottoscritto
+            <strong data-config="senderName">[IL TUO NOME]</strong> ha stabilito che
+            sarebbe una pessima idea non invitarti a uscire.
+          </p>
+
+          <div class="official-clause">
+            <span class="clause-number">Art. 1</span>
+            <p>
+              La destinataria è formalmente invitata a partecipare a
+              <strong data-config="dateTitle">un aperitivo e una passeggiata</strong>,
+              con facoltà di ridere delle battute brutte e ordinare il dolce.
+            </p>
+          </div>
+        </div>
+
+        <div class="decision-area">
+          <p class="decision-prompt">Si richiede di apporre una decisione:</p>
+          <div class="decision-actions">
+            <button class="button button-primary" id="acceptButton" type="button">
+              <span>Accetto l'invito</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m5 12 4 4L19 6"></path>
+              </svg>
+            </button>
+            <button class="button button-secondary" id="declineButton" type="button">
+              Presenta un rifiuto
+            </button>
+          </div>
+          <p class="fine-print">
+            L'accettazione non comporta obblighi oltre a presentarsi ed essere
+            meravigliosamente sé stessa.
+          </p>
+        </div>
+
+        <footer class="paper-footer">
+          <div>
+            <span>Firma del richiedente</span>
+            <strong data-config="senderName">[IL TUO NOME]</strong>
+          </div>
+          <div class="status-mark">IN ATTESA</div>
+        </footer>
+      </article>
+
+      <section class="result-view success-view" id="successView" hidden aria-labelledby="successTitle">
+        <div class="result-copy">
+          <p class="eyebrow accent">Domanda approvata</p>
+          <h2 id="successTitle" tabindex="-1">Decisione eccellente.</h2>
+          <p>
+            Il comitato ha approvato la pratica senza neanche chiedere una marca da bollo.
+          </p>
+        </div>
+
+        <div class="date-dossier">
+          <div class="approved-stamp" aria-hidden="true">APPROVATO</div>
+          <p class="dossier-label">Dettagli della convocazione</p>
+          <h3 data-config="dateTitle">Aperitivo e passeggiata</h3>
+          <dl>
+            <div>
+              <dt>Quando</dt>
+              <dd data-config="dateWhen">[GIORNO E ORA]</dd>
+            </div>
+            <div>
+              <dt>Dove</dt>
+              <dd data-config="dateWhere">[LUOGO]</dd>
+            </div>
+            <div>
+              <dt>Nota</dt>
+              <dd data-config="dateNote">Vieni come sei. Al resto penso io.</dd>
+            </div>
+          </dl>
+          <a class="button button-primary whatsapp-link" id="whatsappLink" href="#" rel="noopener">
+            Conferma su WhatsApp
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6"></path>
+            </svg>
+          </a>
+        </div>
+
+        <button class="text-button restart-button" type="button">Ricomincia</button>
+      </section>
+
+      <section class="result-view raincheck-view" id="raincheckView" hidden aria-labelledby="raincheckTitle">
+        <div class="result-copy">
+          <p class="eyebrow accent">Pratica archiviata con eleganza</p>
+          <h2 id="raincheckTitle" tabindex="-1">Nessuna pressione.</h2>
+          <p>
+            Il comitato prende atto della decisione. L'invito resta un complimento,
+            non un contratto.
+          </p>
+        </div>
+        <div class="raincheck-note">
+          <p>Esito ufficiale</p>
+          <strong>Magari un'altra volta.</strong>
+          <span>Zero musi lunghi. Promesso.</span>
+        </div>
+        <button class="text-button restart-button" type="button">Torna all'invito</button>
+      </section>
+    </main>
+
+    <dialog class="decline-dialog" id="declineDialog" aria-labelledby="dialogTitle">
+      <form method="dialog" class="decline-form" id="declineForm" novalidate>
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow accent">Modulo DR-01</p>
+            <h2 id="dialogTitle">Istanza ufficiale di rifiuto</h2>
+          </div>
+          <button class="icon-button" id="closeDialog" type="button" aria-label="Chiudi il modulo">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div id="formStage">
+          <fieldset>
+            <legend>Motivazione da sottoporre al comitato</legend>
+            <p class="helper-text">Selezionare una sola motivazione, possibilmente credibile.</p>
+
+            <label class="reason-option">
+              <input type="radio" name="reason" value="calendar" />
+              <span>
+                <strong>Consultazione del calendario in corso</strong>
+                <small>I pianeti e gli impegni non hanno ancora raggiunto un accordo.</small>
+              </span>
+            </label>
+
+            <label class="reason-option">
+              <input type="radio" name="reason" value="snacks" />
+              <span>
+                <strong>Informativa snack insufficiente</strong>
+                <small>Non sono state fornite garanzie scritte sulla disponibilità di cibo.</small>
+              </span>
+            </label>
+
+            <label class="reason-option">
+              <input type="radio" name="reason" value="charm" />
+              <span>
+                <strong>Livello di fascino sospetto</strong>
+                <small>L'offerta appare fin troppo interessante per essere archiviata subito.</small>
+              </span>
+            </label>
+          </fieldset>
+
+          <p class="form-error" id="formError" role="alert"></p>
+          <button class="button button-primary full-width" type="submit">
+            Invia all'ufficio competente
+          </button>
+        </div>
+
+        <div class="ruling-stage" id="rulingStage" hidden>
+          <div class="rejected-stamp" aria-hidden="true">RESPINTO</div>
+          <p class="ruling-counter" id="rulingCounter"></p>
+          <h3 id="rulingTitle"></h3>
+          <p id="rulingMessage" aria-live="polite"></p>
+          <button class="button button-primary full-width" id="retryDecline" type="button">
+            Compila una nuova istanza
+          </button>
+          <button class="text-button full-width" id="raincheckButton" type="button" hidden>
+            Richiedi un “magari un'altra volta”
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="confetti" id="confetti" aria-hidden="true"></div>
+  </body>
+</html>
