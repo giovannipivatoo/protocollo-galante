@@ -1,15 +1,38 @@
 const CONFIG = {
-  recipientName: "Vitoria",
+  recipientName: "una persona molto speciale",
   senderName: "Giovanni",
   dateTitle: "un aperitivo e una passeggiata",
   dateNote: "Scegli il giorno. A tutto il resto penso io.",
   whatsappNumber: "393924899781",
   whatsappMessage:
-    "Confermo ufficialmente: accetto l'invito.",
+    "Confermo ufficialmente: accetto l'itnvito.",
+  photos: [
+    {
+      src: "photos/placeholder-01.svg",
+      alt: "Spazio riservato alla prima fotografia di Giovanni",
+      caption: "Ritratto ufficiale, da sostituire",
+    },
+    {
+      src: "photos/placeholder-02.svg",
+      alt: "Spazio riservato alla seconda fotografia di Giovanni",
+      caption: "Reperto fotografico numero due",
+    },
+    {
+      src: "photos/placeholder-03.svg",
+      alt: "Spazio riservato alla terza fotografia di Giovanni",
+      caption: "Documentazione complementare",
+    },
+    {
+      src: "photos/placeholder-04.svg",
+      alt: "Spazio riservato alla quarta fotografia di Giovanni",
+      caption: "Ultima prova depositata agli atti",
+    },
+  ],
 };
 
 const MAX_DECLINE_ATTEMPTS = 5;
 const REASONS_PER_ATTEMPT = 4;
+const CAROUSEL_AUTOPLAY_DELAY = 5_800;
 
 const declineReasons = [
   {
@@ -154,9 +177,20 @@ const dateFormError = document.querySelector("#dateFormError");
 const whatsappLink = document.querySelector("#whatsappLink");
 const confetti = document.querySelector("#confetti");
 const restartButtons = document.querySelectorAll(".restart-button");
+const photoCarousel = document.querySelector("#photoCarousel");
+const carouselViewport = document.querySelector("#carouselViewport");
+const carouselTrack = document.querySelector("#carouselTrack");
+const carouselPrevious = document.querySelector("#carouselPrevious");
+const carouselNext = document.querySelector("#carouselNext");
+const carouselStatus = document.querySelector("#carouselStatus");
+const carouselDots = document.querySelector("#carouselDots");
 
 let declineAttempts = 0;
 let lastReasonIds = [];
+let carouselIndex = 0;
+let carouselAutoplayTimer;
+let carouselPointerStartX;
+let carouselPointerStartY;
 
 function shuffle(items) {
   const shuffled = [...items];
@@ -210,7 +244,26 @@ function renderReasonOptions() {
   reasonList.replaceChildren(fragment);
 }
 
+function normalizeRecipientName(value) {
+  if (!value) return "";
+
+  return value
+    .replace(/[\u0000-\u001f\u007f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 60);
+}
+
+function resolveRecipientName() {
+  const searchParams = new URLSearchParams(window.location.search);
+  return normalizeRecipientName(
+    searchParams.get("nome") || searchParams.get("name"),
+  ) || CONFIG.recipientName;
+}
+
 function populateConfiguration() {
+  CONFIG.recipientName = resolveRecipientName();
+
   document.querySelectorAll("[data-config]").forEach((element) => {
     const key = element.dataset.config;
     if (Object.hasOwn(CONFIG, key)) {
@@ -219,6 +272,203 @@ function populateConfiguration() {
   });
 
   dateInput.min = getLocalISODate();
+}
+
+function renderCarousel() {
+  const photos = Array.isArray(CONFIG.photos)
+    ? CONFIG.photos.filter((photo) => photo?.src)
+    : [];
+
+  if (photos.length === 0) {
+    photoCarousel.classList.add("is-empty");
+    carouselViewport.removeAttribute("tabindex");
+    carouselTrack.innerHTML =
+      '<div class="carousel-empty"><strong>Nessuna fotografia depositata.</strong><span>Aggiungi le immagini dentro CONFIG.photos in script.js.</span></div>';
+    carouselPrevious.hidden = true;
+    carouselNext.hidden = true;
+    carouselStatus.textContent = "Archivio fotografico vuoto";
+    return;
+  }
+
+  const slides = document.createDocumentFragment();
+  const dots = document.createDocumentFragment();
+
+  photos.forEach((photo, index) => {
+    const figure = document.createElement("figure");
+    figure.className = "carousel-slide";
+    figure.setAttribute("role", "group");
+    figure.setAttribute("aria-roledescription", "diapositiva");
+    figure.setAttribute("aria-label", `Fotografia ${index + 1} di ${photos.length}`);
+
+    const frame = document.createElement("div");
+    frame.className = "photo-frame is-loading";
+    frame.style.setProperty("--photo-tilt", `${index % 2 === 0 ? -0.55 : 0.55}deg`);
+
+    const image = document.createElement("img");
+    image.src = photo.src;
+    image.alt = photo.alt || `Fotografia ${index + 1} del richiedente`;
+    image.loading = index === 0 ? "eager" : "lazy";
+    image.decoding = "async";
+    image.draggable = false;
+
+    const fallback = document.createElement("div");
+    fallback.className = "photo-error";
+    fallback.innerHTML =
+      "<strong>Fotografia non disponibile</strong><span>Controlla il percorso del file in script.js.</span>";
+
+    image.addEventListener("load", () => frame.classList.remove("is-loading"));
+    image.addEventListener("error", () => {
+      frame.classList.remove("is-loading");
+      frame.classList.add("has-error");
+      image.hidden = true;
+    });
+
+    const caption = document.createElement("figcaption");
+    const reference = document.createElement("span");
+    const description = document.createElement("span");
+    reference.textContent = `Allegato A.${index + 1}`;
+    description.textContent = photo.caption || `Fotografia ${index + 1}`;
+    caption.append(reference, description);
+
+    frame.append(image, fallback);
+    figure.append(frame, caption);
+    slides.appendChild(figure);
+
+    const dot = document.createElement("button");
+    dot.className = "carousel-dot";
+    dot.type = "button";
+    dot.setAttribute("aria-label", `Mostra la fotografia ${index + 1}`);
+    dot.addEventListener("click", () => {
+      showCarouselSlide(index);
+      restartCarouselAutoplay();
+    });
+    dots.appendChild(dot);
+  });
+
+  carouselTrack.replaceChildren(slides);
+  carouselDots.replaceChildren(dots);
+  carouselPrevious.hidden = photos.length < 2;
+  carouselNext.hidden = photos.length < 2;
+  showCarouselSlide(0, false);
+}
+
+function getCarouselSlideCount() {
+  return carouselTrack.querySelectorAll(".carousel-slide").length;
+}
+
+function showCarouselSlide(nextIndex, announce = true) {
+  const slideCount = getCarouselSlideCount();
+  if (!slideCount) return;
+
+  carouselIndex = (nextIndex + slideCount) % slideCount;
+  carouselTrack.style.setProperty("--carousel-index", carouselIndex);
+
+  carouselTrack.querySelectorAll(".carousel-slide").forEach((slide, index) => {
+    slide.setAttribute("aria-hidden", index === carouselIndex ? "false" : "true");
+  });
+
+  carouselDots.querySelectorAll(".carousel-dot").forEach((dot, index) => {
+    const isCurrent = index === carouselIndex;
+    dot.classList.toggle("is-current", isCurrent);
+    dot.setAttribute("aria-current", isCurrent ? "true" : "false");
+  });
+
+  const activeCaption = CONFIG.photos[carouselIndex]?.caption;
+  carouselStatus.textContent = `Fotografia ${carouselIndex + 1} di ${slideCount}${
+    activeCaption ? ` — ${activeCaption}` : ""
+  }`;
+
+  if (announce) {
+    carouselViewport.focus({ preventScroll: true });
+  }
+}
+
+function stopCarouselAutoplay() {
+  window.clearInterval(carouselAutoplayTimer);
+  carouselAutoplayTimer = undefined;
+}
+
+function startCarouselAutoplay() {
+  stopCarouselAutoplay();
+
+  if (
+    getCarouselSlideCount() < 2 ||
+    document.hidden ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    return;
+  }
+
+  carouselAutoplayTimer = window.setInterval(() => {
+    showCarouselSlide(carouselIndex + 1, false);
+  }, CAROUSEL_AUTOPLAY_DELAY);
+}
+
+function restartCarouselAutoplay() {
+  stopCarouselAutoplay();
+  startCarouselAutoplay();
+}
+
+function initializeCarouselInteractions() {
+  carouselPrevious.addEventListener("click", () => {
+    showCarouselSlide(carouselIndex - 1);
+    restartCarouselAutoplay();
+  });
+
+  carouselNext.addEventListener("click", () => {
+    showCarouselSlide(carouselIndex + 1);
+    restartCarouselAutoplay();
+  });
+
+  carouselViewport.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    showCarouselSlide(carouselIndex + (event.key === "ArrowRight" ? 1 : -1), false);
+    restartCarouselAutoplay();
+  });
+
+  carouselViewport.addEventListener("pointerdown", (event) => {
+    carouselPointerStartX = event.clientX;
+    carouselPointerStartY = event.clientY;
+    carouselViewport.classList.add("is-dragging");
+  });
+
+  carouselViewport.addEventListener("pointerup", (event) => {
+    if (carouselPointerStartX === undefined || carouselPointerStartY === undefined) return;
+
+    const distanceX = event.clientX - carouselPointerStartX;
+    const distanceY = event.clientY - carouselPointerStartY;
+
+    if (Math.abs(distanceX) > 48 && Math.abs(distanceX) > Math.abs(distanceY)) {
+      showCarouselSlide(carouselIndex + (distanceX < 0 ? 1 : -1), false);
+      restartCarouselAutoplay();
+    }
+
+    carouselPointerStartX = undefined;
+    carouselPointerStartY = undefined;
+    carouselViewport.classList.remove("is-dragging");
+  });
+
+  carouselViewport.addEventListener("pointercancel", () => {
+    carouselPointerStartX = undefined;
+    carouselPointerStartY = undefined;
+    carouselViewport.classList.remove("is-dragging");
+  });
+
+  photoCarousel.addEventListener("mouseenter", stopCarouselAutoplay);
+  photoCarousel.addEventListener("mouseleave", startCarouselAutoplay);
+  photoCarousel.addEventListener("focusin", stopCarouselAutoplay);
+  photoCarousel.addEventListener("focusout", (event) => {
+    if (!photoCarousel.contains(event.relatedTarget)) startCarouselAutoplay();
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      stopCarouselAutoplay();
+    } else {
+      startCarouselAutoplay();
+    }
+  });
 }
 
 function getLocalISODate() {
@@ -416,3 +666,6 @@ declineDialog.addEventListener("click", (event) => {
 });
 
 populateConfiguration();
+renderCarousel();
+initializeCarouselInteractions();
+startCarouselAutoplay();

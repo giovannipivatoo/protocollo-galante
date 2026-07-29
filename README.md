@@ -11,12 +11,27 @@ sentenza animata. Al termine resta disponibile un rispettoso “magari un'altra 
 
 Apri `script.js` e modifica i valori dentro `CONFIG`:
 
-- `recipientName`: il suo nome;
 - `senderName`: il tuo nome;
 - `dateTitle`: il tipo di appuntamento;
 - `dateNote`: una nota breve;
 - `whatsappNumber`: numero internazionale senza `+`, spazi o trattini;
 - `whatsappMessage`: messaggio precompilato.
+
+Il nome della destinataria si imposta direttamente nell'URL con il parametro `nome`:
+
+```text
+https://tuo-sito.example/?nome=Giulia
+```
+
+Per nomi composti, gli spazi possono essere scritti come `%20`:
+
+```text
+https://tuo-sito.example/?nome=Maria%20Giulia
+```
+
+È supportato anche il parametro equivalente `name`. Se il parametro non è presente,
+è vuoto o contiene solo spazi, l'invito usa la formula neutra “una persona molto
+speciale” e non mostra alcun nome salvato in precedenza.
 
 La persona che accetta sceglie direttamente la data nella schermata finale. Il giorno
 viene aggiunto automaticamente al messaggio WhatsApp; luogo, organizzazione e resto

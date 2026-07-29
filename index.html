@@ -58,7 +58,7 @@
         <div class="invitation-copy">
           <p class="recipient-line">
             All'attenzione esclusiva di
-            <strong data-config="recipientName">[IL SUO NOME]</strong>
+            <strong data-config="recipientName">una persona molto speciale</strong>
           </p>
 
           <h1 id="mainTitle">Convocazione per un appuntamento</h1>
@@ -87,6 +87,61 @@
             </p>
           </div>
         </div>
+
+        <section
+          class="photo-evidence"
+          id="photoCarousel"
+          aria-labelledby="photoEvidenceTitle"
+          aria-roledescription="carosello"
+        >
+          <div class="photo-evidence-heading">
+            <div>
+              <p class="eyebrow accent">Allegato fotografico</p>
+              <h2 id="photoEvidenceTitle">Materiale a sostegno della candidatura</h2>
+            </div>
+            <p>
+              Una selezione di prove visive depositate dal richiedente per
+              completezza del fascicolo.
+            </p>
+          </div>
+
+          <div class="carousel-shell">
+            <div
+              class="carousel-viewport"
+              id="carouselViewport"
+              tabindex="0"
+              aria-label="Fotografie del richiedente. Usa le frecce per cambiare foto."
+            >
+              <div class="carousel-track" id="carouselTrack"></div>
+            </div>
+
+            <button
+              class="carousel-button carousel-button-previous"
+              id="carouselPrevious"
+              type="button"
+              aria-label="Fotografia precedente"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m15 6-6 6 6 6"></path>
+              </svg>
+            </button>
+            <button
+              class="carousel-button carousel-button-next"
+              id="carouselNext"
+              type="button"
+              aria-label="Fotografia successiva"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 6 6 6-6 6"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="carousel-footer">
+            <p class="carousel-status" id="carouselStatus" aria-live="polite"></p>
+            <div class="carousel-dots" id="carouselDots" aria-label="Scegli una fotografia"></div>
+          </div>
+        </section>
 
         <div class="decision-area">
           <p class="decision-prompt">Si richiede di apporre una decisione:</p>
